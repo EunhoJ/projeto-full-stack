@@ -1,9 +1,10 @@
 import supabase from '../config/supabase'
 import bcrypt, { compare } from 'bcrypt';
+import { response } from 'express';
 import jwt from 'jsonwebtoken';
 
 // Cadastro de Usuário
-const registerUser = async (req, res) => {
+const rUser = async (req, res) => {
   // Desestruturação do objeto
   const { name, email, password } = req.body;
 
@@ -38,19 +39,57 @@ const auth = async (req, res) => {
   }
 
   // Criptografa a senha enviada e compara com a que está no DB
-  const sPassword = await bcrypt.compare( password, user.password);
-  
+  const sPassword = await bcrypt.compare(password, user.password);
+
   if (!sPassword) {
-    return res.status(401).json({ message: "User or password invalid"})
+    return res.status(401).json({ message: "User or password invalid" })
   }
 
   // Gera o Token
   const token = jwt.sign(
     { id: user.id },
     process.env.JWT_SECRET,
-    { expiresIN: "1d"}
+    { expiresIN: "1d" }
   );
 
   res.json({ token });
 };
 
+// Listar todos os Usuários
+const lUser = async (req, res) => {
+  const { data, error } = await supabase
+    .from('users')
+    .select(' id, name, email');
+
+  if (error) {
+    return res.status(500).json({ error: "Error", error });
+  }
+
+  // Devolve todos os usuários encontrados
+  res.json(data);
+};
+
+// Atualizar dados de um registro (Usuário)
+const uUser = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, password } = req.body
+
+  const update = {
+    ...(name && { name }),
+    ...(email && { email }),
+    ...(password && { password: await bcrypt.hash(password, 10) })
+  }
+
+  const { error } = await supabase
+    .from('users')
+    .update(update)
+    .eq('id', id);
+
+  if (error) {
+    return res.status(500).json({ error: "Error", error});
+  }
+
+  res.json( { message: "Update Success"})
+};
+
+// Excluir um registro (Usuário)
