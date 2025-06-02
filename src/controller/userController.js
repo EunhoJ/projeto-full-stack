@@ -38,7 +38,7 @@ const auth = async (req, res) => {
   }
 
   // Criptografa a senha enviada e compara com a que está no DB
-  const sPassword = await bcrypt.compare( password, users.password);
+  const sPassword = await bcrypt.compare( password, user.password);
   
   if (!sPassword) {
     return res.status(401).json({ message: "User or password invalid"})
