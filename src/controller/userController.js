@@ -1,6 +1,5 @@
 import supabase from '../config/supabase'
-import bcrypt, { compare } from 'bcrypt';
-import { response } from 'express';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 // Cadastro de Usuário
@@ -93,3 +92,24 @@ const uUser = async (req, res) => {
 };
 
 // Excluir um registro (Usuário)
+const dUser = async (req, res) => {
+  const { id } = req.params; // 1. Obtém o ID do usuário dos parâmetros da requisição
+
+  // 2. Chama o Supabase para deletar o registro
+  const { error } = await supabase
+    .from('users')
+    .delete()
+    .eq('id', id);
+
+  // 3. Lida com possíveis erros
+  if (error) {
+    // Se houver um erro, envia um status 500 (Erro Interno do Servidor)
+    // e o objeto de erro para o cliente.
+    return res.status(500).json({ error: "Erro ao excluir usuário", error });
+  }
+
+  // 4. Envia uma resposta de sucesso para o cliente
+  // Se a operação for bem-sucedida, envia um status 200 (OK)
+  // e uma mensagem de sucesso.
+  res.status(200).json({ message: "Usuário excluído com sucesso!" });
+};
