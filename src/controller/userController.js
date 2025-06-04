@@ -85,31 +85,23 @@ const uUser = async (req, res) => {
     .eq('id', id);
 
   if (error) {
-    return res.status(500).json({ error: "Error", error});
+    return res.status(500).json({ error: "Error", error });
   }
 
-  res.json( { message: "Update Success"})
+  res.json({ message: "Update Success" })
 };
 
 // Excluir um registro (Usuário)
 const dUser = async (req, res) => {
-  const { id } = req.params; // 1. Obtém o ID do usuário dos parâmetros da requisição
+  const { id } = req.params;
 
-  // 2. Chama o Supabase para deletar o registro
   const { error } = await supabase
     .from('users')
     .delete()
     .eq('id', id);
 
-  // 3. Lida com possíveis erros
   if (error) {
-    // Se houver um erro, envia um status 500 (Erro Interno do Servidor)
-    // e o objeto de erro para o cliente.
     return res.status(500).json({ error: "Erro ao excluir usuário", error });
   }
-
-  // 4. Envia uma resposta de sucesso para o cliente
-  // Se a operação for bem-sucedida, envia um status 200 (OK)
-  // e uma mensagem de sucesso.
   res.status(200).json({ message: "Usuário excluído com sucesso!" });
 };
