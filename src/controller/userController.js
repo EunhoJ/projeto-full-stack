@@ -1,4 +1,4 @@
-import supabase from '../config/supabase'
+import supabase from '../config/supabase.js'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -105,3 +105,5 @@ const dUser = async (req, res) => {
   }
   res.status(200).json({ message: "Usuário excluído com sucesso!" });
 };
+
+export default { rUser, auth, lUser, uUser, dUser };
