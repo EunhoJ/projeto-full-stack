@@ -107,5 +107,3 @@ const dUser = async (req, res) => {
 };
 
 export default { rUser, auth, lUser, uUser, dUser };
-
-// Fixed

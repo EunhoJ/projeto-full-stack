@@ -13,4 +13,3 @@ router.delete('/:id', auth, controller.dUser);
 
 export default router;
 
-// Fixed Git and Branches
